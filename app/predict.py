@@ -9,21 +9,13 @@ class ChurnPredictor:
     """
     Inference class for predicting customer churn using the trained XGBoost model.
     """
-    def __init__(self, model_path='models/final_churn_model.pkl', scaler_path='models/scaler.pkl', feature_names_path='data/processed/feature_names.json'):
+    def __init__(self, model_path='models/final_churn_model.pkl', scaler_path='models/scaler.pkl', feature_names_path='models/feature_columns.pkl'):
         # Ensure paths are correct relative to project root or current app dir
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         
-        try:
-            self.model = joblib.load(os.path.join(base_dir, model_path))
-            self.scaler = joblib.load(os.path.join(base_dir, scaler_path))
-            with open(os.path.join(base_dir, feature_names_path), 'r') as f:
-                self.feature_names = json.load(f)
-        except Exception as e:
-            # Fallback for when running directly from app directory
-            self.model = joblib.load(f"../{model_path}")
-            self.scaler = joblib.load(f"../{scaler_path}")
-            with open(f"../{feature_names_path}", 'r') as f:
-                self.feature_names = json.load(f)
+        self.model = joblib.load(os.path.join(base_dir, model_path))
+        self.scaler = joblib.load(os.path.join(base_dir, scaler_path))
+        self.feature_names = list(joblib.load(os.path.join(base_dir, feature_names_path)))
                 
     def preprocess_input(self, data_dict):
         """
