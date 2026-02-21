@@ -1,61 +1,95 @@
 import pandas as pd
+import requests
 import os
 from datetime import datetime
 
-RAW_DATA_PATH = "data/raw/online_retail.csv"
-
 def download_dataset():
     """
-    Download and save the Online Retail dataset
+    Download the Online Retail dataset
+    Save to data/raw/online_retail.csv
+    
+    HINT: Use pandas read_excel or read_csv
+    HINT: Handle potential download failures
     """
-    print("Starting dataset download...")
 
-    os.makedirs("data/raw", exist_ok=True)
-
-    # Try UCI first (manual download fallback if blocked)
+    """
+    REQUIRED DATASET:
+    - File: online_retail_II.xlsx (or Year 2010-2011.xlsx)
+    - Download from: http://archive.ics.uci.edu/ml/machine-learning-databases/00502/
+    - If UCI is down, use Kaggle: https://www.kaggle.com/datasets/carrie1/ecommerce-data
+    - Expected rows: 541,909 rows
+    """
+    url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00502/online_retail_II.xlsx"
+    csv_path = 'data/raw/online_retail.csv'
+    
+    # Create directory structure
+    os.makedirs('data/raw', exist_ok=True)
+    
+    if os.path.exists(csv_path):
+        print(f"Dataset already exists at {csv_path}")
+        return True
+        
+    print(f"Downloading dataset from {url}...")
     try:
-        df = pd.read_excel(
-            "data/raw/online_retail_II.xlsx",
-            sheet_name=0
-        )
-        print("Loaded dataset from local Excel file.")
-    except:
-        raise FileNotFoundError(
-            "Please download 'online_retail_II.xlsx' manually and place it in data/raw/"
-        )
-
-    df.to_csv(RAW_DATA_PATH, index=False, encoding="latin1")
-
-    print(f"Dataset saved to {RAW_DATA_PATH}")
-    print(f"Rows: {df.shape[0]}, Columns: {df.shape[1]}")
-    print(f"Download completed at {datetime.now()}")
+        response = requests.get(url, timeout=120)
+        response.raise_for_status()
+        xlsx_path = 'data/raw/online_retail_II.xlsx'
+        with open(xlsx_path, 'wb') as f:
+            f.write(response.content)
+            
+        print("Converting to CSV... This might take a minute.")
+        # The dataset has two sheets, we need 'Year 2010-2011' to get the ~541,909 rows
+        df = pd.read_excel(xlsx_path, sheet_name='Year 2010-2011')
+        df.to_csv(csv_path, index=False)
+        print("Dataset converted to CSV successfully.")
+        
+    except Exception as e:
+        print(f"Error downloading: {e}")
+        return False
+    
+    print(f"Dataset downloaded: {datetime.now()}")
+    print(f"Saved to: {csv_path}")
+    
+    return True
 
 def load_raw_data():
     """
-    Load raw dataset
+    Load the raw dataset and return DataFrame
+    
+    Returns:
+        pd.DataFrame: Raw dataset
     """
-    df = pd.read_csv(RAW_DATA_PATH, encoding="latin1")
+    df = pd.read_csv('data/raw/online_retail.csv')
     return df
 
-def generate_data_profile():
+def generate_data_profile(df=None):
     """
-    Generate basic data profile
+    Generate initial data profile and save to data/raw/data_profile.txt
+    
+    Include:
+    - Number of rows and columns
+    - Column names and types
+    - Memory usage
+    - First few rows preview
     """
-    df = load_raw_data()
-
-    profile_path = "data/raw/data_profile.txt"
-    with open(profile_path, "w") as f:
-        f.write(f"Rows: {df.shape[0]}\n")
-        f.write(f"Columns: {df.shape[1]}\n\n")
-        f.write("Column Info:\n")
-        f.write(str(df.dtypes))
-        f.write("\n\nMemory Usage:\n")
-        f.write(str(df.memory_usage(deep=True)))
-        f.write("\n\nSample Data:\n")
-        f.write(str(df.head()))
-
-    print(f"Data profile saved to {profile_path}")
+    if df is None:
+        df = load_raw_data()
+        
+    profile_path = 'data/raw/data_profile.txt'
+    with open(profile_path, 'w') as f:
+        f.write(f"Number of rows: {len(df)}\n")
+        f.write(f"Number of columns: {len(df.columns)}\n")
+        f.write(f"Memory usage: {df.memory_usage(deep=True).sum() / 1024**2:.2f} MB\n")
+        f.write("\nColumns and Types:\n")
+        for col, dtype in df.dtypes.items():
+            f.write(f"- {col}: {dtype}\n")
+            
+        f.write("\nFirst few rows:\n")
+        f.write(df.head().to_string())
+        
+    print(f"Data profile generated at {profile_path}")
 
 if __name__ == "__main__":
     download_dataset()
-    generate_data_profile()
+    df = load_raw_data()
+    generate_data_profile(df)

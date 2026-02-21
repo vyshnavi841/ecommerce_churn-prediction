@@ -1,8 +1,13 @@
-version: "3.9"
+version: '3.8'
 
 services:
-  churn-app:
+  churn_predictor:
     build: .
+    container_name: ecommerce_churn_app
     ports:
       - "8501:8501"
-    container_name: churn_streamlit_app
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped

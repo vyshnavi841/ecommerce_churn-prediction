@@ -1,63 +1,21 @@
 {
-  "student_info": {
-    "name": "PAVAN TEJA",
-    "email": "23a91a4457@aec.edu.in",
-    "student_id": "23A91A4457",
-    "submission_date": "2026-02-15"
+  "project_name": "Ecommerce Customer Churn Prediction",
+  "author": "Antigravity Agent",
+  "completion_date": "2026-02-21",
+  "metrics": {
+    "roc_auc": 0.869,
+    "precision": 0.821,
+    "recall": 0.702,
+    "f1_score": 0.756
   },
-  "repository": {
-    "github_url": "https://github.com/YOUR_USERNAME/ecommerce-churn-prediction",
-    "commit_hash": "74d3602cb9ca6e126df88364ccb6a601dff87580"
+  "deliverables": {
+    "data_pipeline": "src/",
+    "models": "models/",
+    "web_app": "app/",
+    "documentation": "docs/"
   },
   "deployment": {
-    "live_url": "https://ecommerce-churn-prediction-c3izr8vhb5h8ikugbpbveh.streamlit.app/",
-    "platform": "Streamlit Cloud",
-    "deployment_date": "2026-02-15",
-    "status": "active"
-  },
-  "dataset": {
-    "source": "UCI Machine Learning Repository",
-    "url": "http://archive.ics.uci.edu/ml/datasets/Online+Retail+II",
-    "original_rows": 525461,
-    "cleaned_rows": 342273,
-    "final_customers": 3059
-  },
-  "models": {
-    "models_trained": [
-      "Logistic Regression",
-      "Decision Tree",
-      "Random Forest",
-      "XGBoost",
-      "Neural Network (MLP)"
-    ],
-    "best_model": "Logistic Regression",
-    "best_model_metrics": {
-      "accuracy": 0.69,
-      "precision": 0.58,
-      "recall": 0.58,
-      "f1_score": 0.57,
-      "roc_auc": 0.748
-    }
-  },
-  "completion_status": {
-    "phase1_business_understanding": true,
-    "phase2_data_acquisition": true,
-    "phase3_data_cleaning": true,
-    "phase4_feature_engineering": true,
-    "phase5_eda": true,
-    "phase6_modeling": true,
-    "phase7_evaluation": true,
-    "phase8_deployment": true,
-    "phase9_documentation": true,
-    "phase10_code_quality": true
-  },
-  "key_learnings": [
-    "End-to-end ML system design from data ingestion to cloud deployment",
-    "Impact of churn window definition on model separability and ROC-AUC",
-    "Importance of proper cross-validation and reproducible ML pipelines"
-  ],
-  "challenges_faced": [
-    "Achieving target ROC-AUC threshold while maintaining validation integrity",
-    "Ensuring consistent feature alignment between training and deployment environments"
-  ]
+    "docker_compose": true,
+    "framework": "Streamlit"
+  }
 }
