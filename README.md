@@ -1,5 +1,7 @@
 # E-Commerce Churn Prediction System
 
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ecommercechurnprediction-cqhr6paivumikvmfa9bezv.streamlit.app/)
+
 ## Project Overview
 This repository contains an end-to-end Machine Learning pipeline and interactive web application designed to predict customer churn for an e-commerce business using the UCI Online Retail dataset.
 
